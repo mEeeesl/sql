@@ -1,4 +1,6 @@
 -- 4Àå, DataType conversion
+-- null ¡Úsysdata¶û ¡Únvl ¸¹ÀÌ¾¸
+
 
 select hire_date
 from employees
