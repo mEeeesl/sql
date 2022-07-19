@@ -1,6 +1,6 @@
 -- 1장 Select
 -- 내가 원하는것(column)을 request 해서 table로 response 받는 것
-select * from departments;
+select * from departments;  -- * = all column
 
 --select columnName from TableNames(복수형);
 
@@ -10,6 +10,7 @@ from departments;
 select location_id, department_id
 from departments;
 
+-- desc = Table의 구조를 확인
 desc departments
 
 -- 과제] employees 구조를 확인하라.
@@ -53,6 +54,8 @@ from employees;
 select employee_id as "Emp #", last_name "Name", job_id "Job", hire_date "Hire Date"
 from employees;
 
+
+-- || 붙이기 연산자 = 문자로 변환한다.
 select last_name || job_id
 from employees;
 select last_name || ' is ' || job_id

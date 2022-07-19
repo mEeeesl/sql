@@ -1,8 +1,8 @@
--- group function 
+-- 5장 group function 
 
 -- ★count()★ 개수파악 - 많이씀
 -- ※group function은 null 값을 무시함※
--- 파라미터 record 메소드가 n개 ( single은 1개 )
+-- 파라미터 record n개 ( single은 1개 )
 -- 싱글에서 from employees 조지면 값이 개많이 나와야 되는데
 -- group function 에서 from employees 조지면 
 -- 얘네가 그룹이되서 값이 1개만 나옴
@@ -32,7 +32,7 @@ select count(*)
 from employees
 where department_id = 70;
 
--- employee_id = primary key
+-- employee_id = primary key = null값 없음
 select count(employee_id) 
 from employees; -- 107
 
@@ -108,7 +108,7 @@ select department_id, max(salary)
 from employees
 group by department_id
 having max(salary) > 10000;
--- 그룹이 갖고있는 필드중에 하나 쓰면댐 
+-- 그룹이 갖고있는 필드중에 하나 쓰면댐 08783
 -- 여기선 department,max 2개
 
 select department_id, max(salary) max_sal
@@ -127,5 +127,86 @@ select department_id, max(salary)
 from employees
 where max(salary) > 10000
 group by department_id; 
--- Error] 조건문에 group by 들어가면 having 써야된다.
+-- Error] 조건문에 group이 들어가면 having 써야된다.
 -- having = group을 골라내는 것이다.
+
+select job_id, sum(salary) payroll
+from employees
+where job_id not like'%REP%'
+group by job_id
+having sum(salary) > 13000
+order by payroll;
+
+select department_id, avg(salary)
+from employees
+group by department_id
+order by avg(salary) desc;
+
+select max(avg(salary))
+from employees
+group by department_id;
+
+-- 그룹바이해서 부서갯수만큼 n개 그룹만들어지고 
+-- avg함수도 n번 실행
+-- record n개가 만들어지고
+-- 그게 그룹이되어 max함수의 값이 1개가 됨 19333.333333
+
+select sum(max(avg(salary)))
+from employees
+group by department_id;
+-- Error - 너무 깊이 들어감, 2차까진 ㅇㅋ 인데 3차이상은 못받음
+-- 그룹바이는 2개 함수까지만 
+
+select department_id, round(avg(salary))
+from employees
+group by department_id;
+-- 라운드는 12번 실행 + 12번 리턴
+-- 그룹 + 싱글 function
+
+select department_id, round(avg(salary))
+from employees;
+
+-- Error
+-- 그룹 + 싱글 할땐 group by 해조야댐
+-- 그룹 + 그룹은 Ok, 그룹 + 그룹 + 그룹은 No
+
+--과제] 매니저별 관리 직원들 중 최소 월급을 조회하라.
+--  최소월급이 $6,000 초과여야 한다.
+
+select manager_id, min(salary)
+from employees
+where manager_id is not null
+group by manager_id
+having min(salary) > 6000
+order by 2 desc;
+
+--과제] 2001년 2002년 2003년도별 입사자 수를 찾는다.
+-- ★★★★★ 집계할때 현장에서 자주 씀 ★★★★★★
+
+select sum(decode(to_char(hire_date, 'yyyy'), '2001', 1, 0)) "2001",
+    sum(decode(to_char(hire_date, 'yyyy'), '2002', 1, 0)) "2002",
+    sum(decode(to_char(hire_date, 'yyyy'), '2003', 1, 0)) "2003"
+from employees;
+
+select count(case when hire_date like '2001%' then 1 else null end) "2001",
+    count(case when hire_date like '2002%' then 1 else null end) "2002",
+    count(case when hire_date like '2003%' then 1 else null end) "2003"
+from employees;
+
+--과제] 직업별, 부서별 월급합을 조회하라. ★ ★ ★ ★ ★
+--      부서는 20, 50, 80 이다.
+
+select job_id,
+    sum(decode(department_id, 20, salary)) "20",
+    sum(decode(department_id, 50, salary)) "50",
+    sum(decode(department_id, 80, salary)) "80"
+from employees
+group by job_id;
+    
+    
+select job_id,
+    sum(case when department_id = 20 then salary else null end)"20",
+    sum(case when department_id = 50 then salary else null end)"50",
+    sum(case when department_id = 80 then salary else null end)"80"
+from employees
+group by job_id;

@@ -2,7 +2,7 @@
 select employee_id, last_name, department_id
 from employees
 where department_id = 90; 
--- where = 조건문 = 리턴값은 boolean Type
+-- where = 조건문 = 리턴값이 boolean Type
 -- departmeint_id 가 90인 record 가 response 됨
 
 -- 과제] 176번 사원의 사번, 이름, 부서번호를 조회하라

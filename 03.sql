@@ -1,5 +1,5 @@
 -- 3장 Single Function 
--- 파라미터 레코드 메소드가 n개
+-- 파라미터 레코드 개수 1개
 --SQL(Structed Query Language)
 --Function은 PL/SQL ( Procedure Language / SQL )로 작성되있음
 --API 사용법만 읽힐거래
